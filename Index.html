@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Upscaler</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-expand-alt"></i> AI Image Upscaler</h1>
+            <p class="subtitle">Upscale your images up to 4x using AI in your browser</p>
+        </header>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Drag & Drop Your Image</h3>
+                    <p>or click to browse (JPG, PNG, WebP)</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <button class="btn btn-primary" id="browseBtn">
+                        <i class="fas fa-folder-open"></i> Browse Images
+                    </button>
+                    <div class="file-info" id="fileInfo"></div>
+                </div>
+
+                <div class="controls-section">
+                    <div class="control-group">
+                        <label for="scaleFactor"><i class="fas fa-search-plus"></i> Upscale Factor</label>
+                        <div class="scale-options">
+                            <button class="scale-option active" data-scale="2">2x</button>
+                            <button class="scale-option" data-scale="3">3x</button>
+                            <button class="scale-option" data-scale="4">4x</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="modelSelect"><i class="fas fa-brain"></i> AI Model</label>
+                        <select id="modelSelect" class="model-select">
+                            <option value="esrgan">ESRGAN (Best Quality)</option>
+                            <option value="waifu2x">Waifu2x (Anime/Cartoon)</option>
+                            <option value="bicubic">Bicubic (Fast)</option>
+                            <option value="lanczos">Lanczos (Sharp)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label><i class="fas fa-sliders-h"></i> Enhancements</label>
+                        <div class="enhancement-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enhanceDetails" checked>
+                                <span>Enhance Details</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="reduceNoise" checked>
+                                <span>Reduce Noise</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sharpen">
+                                <span>Sharpen</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-process" id="processBtn" disabled>
+                            <i class="fas fa-magic"></i> Upscale Image
+                        </button>
+                        <button class="btn btn-secondary" id="downloadBtn" disabled>
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-secondary" id="resetBtn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="comparison-container">
+                    <div class="image-box">
+                        <h3><i class="fas fa-image"></i> Original</h3>
+                        <div class="image-wrapper">
+                            <img id="originalImage" alt="Original">
+                            <div class="image-placeholder" id="originalPlaceholder">
+                                <i class="fas fa-image"></i>
+                                <p>Original image will appear here</p>
+                            </div>
+                            <div class="image-info">
+                                <span id="originalSize">-</span>
+                                <span id="originalDimensions">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-slider">
+                        <div class="slider-bar">
+                            <div class="slider-handle">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                        </div>
+                        <div class="slider-label">Drag to compare</div>
+                    </div>
+
+                    <div class="image-box">
+                        <h3><i class="fas fa-expand-alt"></i> Upscaled</h3>
+                        <div class="image-wrapper">
+                            <img id="upscaledImage" alt="Upscaled">
+                            <div class="image-placeholder" id="upscaledPlaceholder">
+                                <i class="fas fa-sync-alt fa-spin"></i>
+                                <p>Processing...</p>
+                            </div>
+                            <div class="image-info">
+                                <span id="upscaledSize">-</span>
+                                <span id="upscaledDimensions">-</span>
+                                <span id="processingTime">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Scale Factor</h4>
+                            <p class="stat-value" id="scaleStat">-</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Processing Time</h4>
+                            <p class="stat-value" id="timeStat">-</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Quality Improvement</h4>
+                            <p class="stat-value" id="qualityStat">-</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-sd-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>File Size Increase</h4>
+                            <p class="stat-value" id="sizeStat">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <h3>How It Works</h3>
+                <p>This AI-powered upscaler uses deep learning models to enhance image resolution while preserving details.</p>
+            </div>
+            <div class="info-box">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Tips</h3>
+                <p>• Use ESRGAN for photos, Waifu2x for anime<br>
+                   • Best results with images under 2MB<br>
+                   • Processing may take longer for large images</p>
+            </div>
+            <div class="info-box">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Privacy</h3>
+                <p>All processing happens in your browser. Your images never leave your computer.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with <i class="fas fa-heart"></i> by AI Image Upscaler | Powered by TensorFlow.js & ONNX Runtime</p>
+        </footer>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="modal" id="progressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sync-alt fa-spin"></i> Processing Image</h3>
+            </div>
+            <div class="modal-body">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText">Initializing AI model...</p>
+                <div class="progress-details">
+                    <div class="detail-item">
+                        <span>Step:</span>
+                        <span id="currentStep">Loading model</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Time Elapsed:</span>
+                        <span id="elapsedTime">0s</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Memory Usage:</span>
+                        <span id="memoryUsage">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@latest/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
