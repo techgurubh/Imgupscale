@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="canvas" width="64" height="64"></canvas>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Create gradient
+    const gradient = ctx.createLinearGradient(0, 0, 64, 64);
+    gradient.addColorStop(0, '#4361ee');
+    gradient.addColorStop(1, '#7209b7');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 64, 64);
+    
+    // Draw up arrow
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(32, 20);
+    ctx.lineTo(42, 35);
+    ctx.lineTo(38, 35);
+    ctx.lineTo(38, 44);
+    ctx.lineTo(26, 44);
+    ctx.lineTo(26, 35);
+    ctx.lineTo(22, 35);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Convert to favicon
+    const link = document.createElement('a');
+    link.download = 'favicon.ico';
+    link.href = canvas.toDataURL('image/x-icon');
+    link.click();
+</script>
+</body>
+</html>
