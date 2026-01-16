@@ -3,24 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Upscaler</title>
+    <title>AI Image Upscaler - 100% Browser-Based</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-expand-alt"></i> AI Image Upscaler</h1>
-            <p class="subtitle">Upscale your images up to 4x using AI in your browser</p>
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-expand-arrows-alt"></i>
+                <h1>AI Image Upscaler</h1>
+            </div>
+            <p class="tagline">Upscale images 2x-4x using AI - 100% in your browser</p>
         </header>
 
-        <div class="main-content">
-            <div class="upload-section">
-                <div class="upload-area" id="dropArea">
-                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
                     <h3>Drag & Drop Your Image</h3>
-                    <p>or click to browse (JPG, PNG, WebP)</p>
+                    <p>Supports JPG, PNG, WebP (Max 10MB)</p>
                     <input type="file" id="fileInput" accept="image/*" hidden>
                     <button class="btn btn-primary" id="browseBtn">
                         <i class="fas fa-folder-open"></i> Browse Images
@@ -28,41 +39,59 @@
                     <div class="file-info" id="fileInfo"></div>
                 </div>
 
-                <div class="controls-section">
+                <!-- Controls -->
+                <div class="controls-panel">
                     <div class="control-group">
-                        <label for="scaleFactor"><i class="fas fa-search-plus"></i> Upscale Factor</label>
-                        <div class="scale-options">
-                            <button class="scale-option active" data-scale="2">2x</button>
-                            <button class="scale-option" data-scale="3">3x</button>
-                            <button class="scale-option" data-scale="4">4x</button>
+                        <label><i class="fas fa-search-plus"></i> Upscale Factor</label>
+                        <div class="scale-buttons">
+                            <button class="scale-btn active" data-scale="2">2x</button>
+                            <button class="scale-btn" data-scale="3">3x</button>
+                            <button class="scale-btn" data-scale="4">4x</button>
                         </div>
                     </div>
 
                     <div class="control-group">
-                        <label for="modelSelect"><i class="fas fa-brain"></i> AI Model</label>
-                        <select id="modelSelect" class="model-select">
-                            <option value="esrgan">ESRGAN (Best Quality)</option>
-                            <option value="waifu2x">Waifu2x (Anime/Cartoon)</option>
-                            <option value="bicubic">Bicubic (Fast)</option>
-                            <option value="lanczos">Lanczos (Sharp)</option>
-                        </select>
+                        <label><i class="fas fa-robot"></i> AI Model</label>
+                        <div class="model-selector">
+                            <select id="modelSelect" class="model-select">
+                                <option value="esrgan">ESRGAN (Best Quality)</option>
+                                <option value="waifu2x">Waifu2x (Anime/Art)</option>
+                                <option value="real-esrgan">Real-ESRGAN (Realistic)</option>
+                                <option value="bicubic">Bicubic (Fast)</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="control-group">
                         <label><i class="fas fa-sliders-h"></i> Enhancements</label>
-                        <div class="enhancement-options">
-                            <label class="checkbox-label">
+                        <div class="enhancements">
+                            <label class="checkbox">
                                 <input type="checkbox" id="enhanceDetails" checked>
-                                <span>Enhance Details</span>
+                                <span class="checkmark"></span>
+                                Enhance Details
                             </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="reduceNoise" checked>
-                                <span>Reduce Noise</span>
+                            <label class="checkbox">
+                                <input type="checkbox" id="denoise" checked>
+                                <span class="checkmark"></span>
+                                Denoise
                             </label>
-                            <label class="checkbox-label">
+                            <label class="checkbox">
                                 <input type="checkbox" id="sharpen">
-                                <span>Sharpen</span>
+                                <span class="checkmark"></span>
+                                Sharpen
                             </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><i class="fas fa-tachometer-alt"></i> Processing Speed</label>
+                        <div class="speed-slider">
+                            <input type="range" id="speedSlider" min="1" max="3" value="2">
+                            <div class="speed-labels">
+                                <span>Fast</span>
+                                <span>Balanced</span>
+                                <span>Quality</span>
+                            </div>
                         </div>
                     </div>
 
@@ -78,114 +107,128 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="results-section">
-                <div class="comparison-container">
-                    <div class="image-box">
+            <!-- Results Section -->
+            <section class="results-section">
+                <div class="comparison-view">
+                    <div class="image-container original">
                         <h3><i class="fas fa-image"></i> Original</h3>
                         <div class="image-wrapper">
                             <img id="originalImage" alt="Original">
-                            <div class="image-placeholder" id="originalPlaceholder">
+                            <div class="placeholder" id="originalPlaceholder">
                                 <i class="fas fa-image"></i>
-                                <p>Original image will appear here</p>
+                                <p>Your image will appear here</p>
                             </div>
-                            <div class="image-info">
-                                <span id="originalSize">-</span>
-                                <span id="originalDimensions">-</span>
-                            </div>
+                        </div>
+                        <div class="image-stats">
+                            <span id="originalSize">-</span>
+                            <span id="originalDimensions">-</span>
                         </div>
                     </div>
 
-                    <div class="comparison-slider">
-                        <div class="slider-bar">
-                            <div class="slider-handle">
-                                <i class="fas fa-exchange-alt"></i>
+                    <div class="comparison-controls">
+                        <div class="slider-container">
+                            <div class="slider-track"></div>
+                            <div class="slider-thumb" id="sliderThumb">
+                                <i class="fas fa-arrows-alt-h"></i>
                             </div>
                         </div>
-                        <div class="slider-label">Drag to compare</div>
+                        <div class="comparison-label">Drag to compare</div>
                     </div>
 
-                    <div class="image-box">
+                    <div class="image-container upscaled">
                         <h3><i class="fas fa-expand-alt"></i> Upscaled</h3>
                         <div class="image-wrapper">
                             <img id="upscaledImage" alt="Upscaled">
-                            <div class="image-placeholder" id="upscaledPlaceholder">
-                                <i class="fas fa-sync-alt fa-spin"></i>
-                                <p>Processing...</p>
+                            <div class="placeholder" id="upscaledPlaceholder">
+                                <i class="fas fa-sync-alt"></i>
+                                <p>Ready to upscale</p>
                             </div>
-                            <div class="image-info">
-                                <span id="upscaledSize">-</span>
-                                <span id="upscaledDimensions">-</span>
-                                <span id="processingTime">-</span>
-                            </div>
+                        </div>
+                        <div class="image-stats">
+                            <span id="upscaledSize">-</span>
+                            <span id="upscaledDimensions">-</span>
+                            <span id="processingTime">-</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="stats-container">
+                <!-- Stats -->
+                <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">
+                        <div class="stat-icon success">
                             <i class="fas fa-arrows-alt-h"></i>
                         </div>
                         <div class="stat-content">
                             <h4>Scale Factor</h4>
-                            <p class="stat-value" id="scaleStat">-</p>
+                            <p class="stat-value" id="scaleValue">-</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tachometer-alt"></i>
+                        <div class="stat-icon info">
+                            <i class="fas fa-clock"></i>
                         </div>
                         <div class="stat-content">
                             <h4>Processing Time</h4>
-                            <p class="stat-value" id="timeStat">-</p>
+                            <p class="stat-value" id="timeValue">-</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
+                        <div class="stat-icon warning">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <div class="stat-content">
-                            <h4>Quality Improvement</h4>
-                            <p class="stat-value" id="qualityStat">-</p>
+                            <h4>Quality Score</h4>
+                            <p class="stat-value" id="qualityValue">-</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-sd-card"></i>
+                        <div class="stat-icon danger">
+                            <i class="fas fa-weight-hanging"></i>
                         </div>
                         <div class="stat-content">
-                            <h4>File Size Increase</h4>
-                            <p class="stat-value" id="sizeStat">-</p>
+                            <h4>Size Increase</h4>
+                            <p class="stat-value" id="sizeValue">-</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="info-section">
-            <div class="info-box">
-                <i class="fas fa-info-circle"></i>
-                <h3>How It Works</h3>
-                <p>This AI-powered upscaler uses deep learning models to enhance image resolution while preserving details.</p>
-            </div>
-            <div class="info-box">
-                <i class="fas fa-lightbulb"></i>
-                <h3>Tips</h3>
-                <p>• Use ESRGAN for photos, Waifu2x for anime<br>
-                   • Best results with images under 2MB<br>
-                   • Processing may take longer for large images</p>
-            </div>
-            <div class="info-box">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Privacy</h3>
-                <p>All processing happens in your browser. Your images never leave your computer.</p>
-            </div>
-        </div>
+            <!-- Info Cards -->
+            <section class="info-section">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>100% Private</h3>
+                    <p>All processing happens in your browser. Your images never leave your device.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Processing</h3>
+                    <p>Uses WebAssembly and WebGL for accelerated processing on your GPU.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h3>Open Source</h3>
+                    <p>Free and open-source. No API keys, no subscriptions, no watermarks.</p>
+                </div>
+            </section>
+        </main>
 
-        <footer>
-            <p>Made with <i class="fas fa-heart"></i> by AI Image Upscaler | Powered by TensorFlow.js & ONNX Runtime</p>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with <i class="fas fa-heart"></i> by AI Image Upscaler | No API keys required | Powered by TensorFlow.js</p>
+            <div class="footer-links">
+                <a href="#" id="githubLink"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#" id="reportIssue"><i class="fas fa-bug"></i> Report Issue</a>
+                <a href="#" id="donate"><i class="fas fa-coffee"></i> Buy me a coffee</a>
+            </div>
         </footer>
     </div>
 
@@ -194,33 +237,85 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-sync-alt fa-spin"></i> Processing Image</h3>
+                <button class="modal-close" id="cancelBtn">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <p id="progressText">Initializing AI model...</p>
-                <div class="progress-details">
-                    <div class="detail-item">
-                        <span>Step:</span>
-                        <span id="currentStep">Loading model</span>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
                     </div>
-                    <div class="detail-item">
-                        <span>Time Elapsed:</span>
+                    <div class="progress-text" id="progressText">Loading AI model...</div>
+                </div>
+                
+                <div class="progress-details">
+                    <div class="detail-row">
+                        <span>Status:</span>
+                        <span id="currentStatus">Initializing...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Time:</span>
                         <span id="elapsedTime">0s</span>
                     </div>
-                    <div class="detail-item">
-                        <span>Memory Usage:</span>
+                    <div class="detail-row">
+                        <span>Memory:</span>
                         <span id="memoryUsage">-</span>
                     </div>
+                    <div class="detail-row">
+                        <span>GPU:</span>
+                        <span id="gpuInfo">Checking...</span>
+                    </div>
+                </div>
+
+                <div class="progress-tips">
+                    <h4><i class="fas fa-lightbulb"></i> Tips for faster processing:</h4>
+                    <ul>
+                        <li>Use Chrome or Edge for best performance</li>
+                        <li>Close other tabs to free up GPU memory</li>
+                        <li>Smaller images process faster</li>
+                        <li>Enable hardware acceleration in browser settings</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@latest/dist/ort.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <!-- Load local libraries -->
+    <script src="libs/tf.min.js"></script>
+    <script src="libs/ort.min.js"></script>
+    <script src="libs/pica.min.js"></script>
+    <!-- Core application -->
+    <script src="models.js"></script>
     <script src="app.js"></script>
+    
+    <!-- Initialize when loaded -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if libraries loaded
+            if (typeof tf === 'undefined') {
+                console.error('TensorFlow.js not loaded');
+                alert('Error: TensorFlow.js failed to load. Please check your internet connection.');
+            }
+            
+            // Initialize app
+            window.app = new ImageUpscaler();
+            
+            // Add event listeners for footer links
+            document.getElementById('githubLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://github.com', '_blank');
+            });
+            
+            document.getElementById('reportIssue').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('To report issues, please create an issue on GitHub.');
+            });
+            
+            document.getElementById('donate').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Thank you for considering a donation! This is a free project.');
+            });
+        });
+    </script>
 </body>
 </html>
